@@ -4,7 +4,7 @@ from wikirecommender import WikipediaRecommender
 
 def main(args: List[str]) -> None:
     if len(args) != 3:
-        print("Usage: python recommend.py <recommender_file_name> <wikipedia_url>")
+        print("Usage: python -m scipts.recommend <recommender_file_name> <wikipedia_url>")
     
     filename = args[1]
     wikipedia_url = args[2]

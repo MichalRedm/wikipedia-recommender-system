@@ -4,7 +4,7 @@ from wikirecommender import WikipediaRecommender
 
 def main(args: List[str]) -> None:
     if len(args) != 2:
-        print("Usage: python load_data.py <output_file_name>")
+        print("Usage: python -m scripts.create_recommender <output_file_name>")
         exit(1)
     
     output = args[1]
