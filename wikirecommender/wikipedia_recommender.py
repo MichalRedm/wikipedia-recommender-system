@@ -6,6 +6,7 @@ import pickle
 import requests
 import pandas as pd
 from time import sleep
+from typing import List, Optional
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -20,11 +21,14 @@ nltk.download('wordnet', quiet=True)
 nltk.download('stopwords', quiet=True)
 
 class WikipediaRecommender:
+    dataset: Optional[pd.DataFrame]
+    vectorizer: Optional[TfidfVectorizer]
+
     def __init__(self):
         self.dataset = None
         self.vectorizer = None
 
-    def custom_stemmer(self, string):
+    def custom_stemmer(self, string: str) -> List[str]:
         """Stem the words and remove stopwords."""
         porter = PorterStemmer()
         stemmed_words = (
@@ -78,10 +82,10 @@ class WikipediaRecommender:
 
         return pd.DataFrame(result)
 
-    def load_articles(self) -> pd.DataFrame:
+    def load_articles(self, page_count: int = 20) -> pd.DataFrame:
         """Fetch and process articles to create a dataset with TF-IDF representation."""
         # Fetch Wikipedia articles
-        df = self.wikipedia_scrapper("https://en.wikipedia.org/wiki/Wikipedia:Popular_pages", 100)
+        df = self.wikipedia_scrapper("https://en.wikipedia.org/wiki/Wikipedia:Popular_pages", page_count)
         
         # Apply custom_stemmer to the text column
         df['stemmed_words'] = df['text'].apply(self.custom_stemmer)
