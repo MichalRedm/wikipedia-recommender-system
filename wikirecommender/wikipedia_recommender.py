@@ -73,7 +73,7 @@ class WikipediaRecommender:
                 queue[:0] = ["https://en.wikipedia.org" + link['href'] for link in links if ":" not in link['href']]
 
                 # Add the page content to results
-                if "List_of" not in current_link:
+                if "List_of" not in current_link and "Wikipedia:" not in current_link:
                     result.append({"wikipedia_url": current_link, "text": body_content.get_text(strip=True)})
                     pbar.update(1)
 
