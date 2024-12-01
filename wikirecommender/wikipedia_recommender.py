@@ -105,7 +105,7 @@ class WikipediaRecommender:
         
         self.dataset = df
 
-    def compare_article_to_dataset(self, url: str) -> pd.DataFrame:
+    def recommend(self, url: str) -> pd.DataFrame:
         """Compare a new article to the dataset using cosine similarity."""
         if self.dataset is None or self.vectorizer is None:
             raise Exception("The dataset is not loaded. Please call load_articles() first.")

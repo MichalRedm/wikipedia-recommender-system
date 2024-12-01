@@ -10,9 +10,9 @@ def main(args: List[str]) -> None:
     wikipedia_url = args[2]
 
     recommender = WikipediaRecommender.load_from_file(filename)
-    result = recommender.compare_article_to_dataset(wikipedia_url)
+    recommendations = recommender.recommend(wikipedia_url)
 
-    print(result.head())
+    print(recommendations.head())
 
 if __name__ == "__main__":
     main(sys.argv)

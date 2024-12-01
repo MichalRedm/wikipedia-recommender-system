@@ -16,7 +16,7 @@ recommender = WikipediaRecommender()
 dataset = recommender.load_articles()
 
 # Compare a new article to the dataset
-recommendations = recommender.compare_article_to_dataset(url)
+recommendations = recommender.recommend(url)
 
 # Show top 5 recommendations
 print(recommendations.head())
