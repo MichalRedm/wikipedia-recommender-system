@@ -12,8 +12,8 @@ url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
 # Instantiate the recommender
 recommender = WikipediaRecommender()
 
-# Load articles into the dataset
-dataset = recommender.load_articles()
+# Load articles into the recommender
+recommender.load_articles()
 
 # Compare a new article to the dataset
 recommendations = recommender.recommend(url)
