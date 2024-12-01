@@ -2,6 +2,26 @@
 
 ![Python package](https://github.com/MichalRedm/wikipedia-recommender-system/actions/workflows/python-package.yml/badge.svg)
 
+## Usage
+
+```python
+from wikirecommender import WikipediaRecommender
+
+url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
+
+# Instantiate the recommender
+recommender = WikipediaRecommender()
+
+# Load articles into the dataset
+dataset = recommender.load_articles()
+
+# Compare a new article to the dataset
+recommendations = recommender.compare_article_to_dataset(url)
+
+# Show top 5 recommendations
+print(recommendations.head())
+```
+
 ## Scripts
 
 There are a few available scripts intended for more general use that make use of `WikipediaRecommender`. They can be found in `./scripts` directory.
