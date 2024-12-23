@@ -2,6 +2,8 @@
 Wikipedia Recommender System
 """
 
-from wikirecommender.wikipedia_recommender import WikipediaRecommender
+from .recommender import WikipediaRecommender
+from .utils import download_nltk_resources
 
-__all__ = ["WikipediaRecommender"]
+# Automatically download NLTK resources when the package is loaded
+download_nltk_resources()
