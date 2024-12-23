@@ -28,7 +28,7 @@ class WikipediaRecommender:
         self.dataset = None
         self.vectorizer = None
 
-    def custom_stemmer(self, string: str) -> List[str]:
+    def stemmer(self, string: str) -> List[str]:
         """Stem the words and remove stopwords."""
         porter = PorterStemmer()
         stemmed_words = (
@@ -87,8 +87,8 @@ class WikipediaRecommender:
         # Fetch Wikipedia articles
         df = self.wikipedia_scrapper(start_link, page_count)
         
-        # Apply custom_stemmer to the text column
-        df['stemmed_words'] = df['text'].apply(self.custom_stemmer)
+        # Apply stemmer to the text column
+        df['stemmed_words'] = df['text'].apply(self.stemmer)
         
         # Combine stemmed words into a single string per article for TF-IDF
         df['processed_text'] = df['stemmed_words'].apply(lambda words: " ".join(words))
@@ -123,7 +123,7 @@ class WikipediaRecommender:
         new_text = body_content.get_text(strip=True)
         
         # Stem and process the new article text
-        stemmed_words = self.custom_stemmer(new_text)
+        stemmed_words = self.stemmer(new_text)
         new_article_text = " ".join(stemmed_words)
         
         # Transform the new article into TF-IDF using the existing vectorizer
