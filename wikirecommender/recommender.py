@@ -51,7 +51,9 @@ class WikipediaRecommender:
         result_df = pd.DataFrame({
             'URL': self.dataset['wikipedia_url'].values,
             'Similarity': similarities
-        }).sort_values(by='Similarity', ascending=False).reset_index()
+        }).sort_values(by='Similarity', ascending=False)
+
+        result_df.index = pd.RangeIndex(start=1, stop=len(result_df) + 1, step=1)
         
         return result_df
     
