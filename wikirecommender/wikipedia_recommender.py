@@ -82,10 +82,10 @@ class WikipediaRecommender:
 
         return pd.DataFrame(result)
 
-    def load_articles(self, page_count: int = 20) -> pd.DataFrame:
+    def load_articles(self, page_count: int = 20, start_link = "https://en.wikipedia.org/wiki/Wikipedia:Popular_pages") -> pd.DataFrame:
         """Fetch and process articles to create a dataset with TF-IDF representation."""
         # Fetch Wikipedia articles
-        df = self.wikipedia_scrapper("https://en.wikipedia.org/wiki/Wikipedia:Popular_pages", page_count)
+        df = self.wikipedia_scrapper(start_link, page_count)
         
         # Apply custom_stemmer to the text column
         df['stemmed_words'] = df['text'].apply(self.custom_stemmer)
