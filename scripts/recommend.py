@@ -1,4 +1,5 @@
 import sys
+import pandas as pd
 from typing import List
 from wikirecommender import WikipediaRecommender
 
@@ -20,6 +21,7 @@ def main(args: List[str]) -> None:
 
     # Display top N recommendations
     top_recommendations = recommendations.head(top_n)
+    pd.set_option('display.max_colwidth', None) # Make sure the URL is displayed in full
     print(top_recommendations)
 
 if __name__ == "__main__":
