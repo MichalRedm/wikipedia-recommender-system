@@ -1,8 +1,9 @@
-import pickle
+import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm.auto import tqdm
+from typing import List
 
 from wikirecommender.scraping import wikipedia_scrapper, wikipedia_scrapper_single_page
 from wikirecommender.processing import stemmer
@@ -31,8 +32,8 @@ class WikipediaRecommender:
         tfidf_matrix = self.vectorizer.fit_transform(df['processed_text'])
         tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=self.vectorizer.get_feature_names_out())
         self.dataset = pd.concat([df[['wikipedia_url']], tfidf_df], axis=1)
-
-    def recommend(self, url: str) -> pd.DataFrame:
+    
+    def _get_similarities(self, url: str) -> np.ndarray:
         """Compare a new article to the dataset using cosine similarity."""
         if self.dataset is None or self.vectorizer is None:
             raise Exception("The dataset is not loaded. Please call load_articles() first.")
@@ -53,6 +54,22 @@ class WikipediaRecommender:
 
         # Compute cosine similarity between the new article and the dataset
         similarities = cosine_similarity(new_article_tfidf, existing_tfidf_matrix).flatten()
+        
+        return similarities
+
+    def recommend(self, url: str | List[str]) -> pd.DataFrame:
+        """Compare a new article to the dataset using cosine similarity."""
+        similarities = None
+
+        if isinstance(url, str):
+            similarities = self._get_similarities(url)
+        elif isinstance(url, list):
+            if len(url) == 0:
+                raise ValueError("URL list cannot be empty.")
+            similarities_list = np.array([self._get_similarities(u) for u in url])
+            similarities = similarities_list.mean(axis=0)
+        else:
+            raise ValueError("URL must be a string or a list of strings.")
         
         # Build the result DataFrame
         result_df = pd.DataFrame({
