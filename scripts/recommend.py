@@ -1,28 +1,41 @@
-import sys
+import argparse
 import pandas as pd
-from typing import List
 from wikirecommender import WikipediaRecommender
 
-def main(args: List[str]) -> None:
-    if len(args) < 3 or len(args) > 4:
-        print("Usage: python -m scripts.recommend <recommender_file_name> <wikipedia_url> [top_n]")
-        exit(1)
-
-    # Required arguments
-    filename = args[1]
-    wikipedia_url = args[2]
+def main() -> None:
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="Generate Wikipedia article recommendations.")
+    parser.add_argument(
+        "recommender_file_name",
+        type=str,
+        help="The name of a CSV file from which the recommender data should be loaded."
+    )
+    parser.add_argument(
+        "wikipedia_urls",
+        nargs="+",  # Allows one or more URLs to be passed
+        help="One or more Wikipedia article URLs for which recommendations should be provided."
+    )
+    parser.add_argument(
+        "--top-n",
+        type=int,
+        default=5,
+        help="Number of top recommended articles to display (default: 5)."
+    )
     
-    # Optional argument with default value
-    top_n = int(args[3]) if len(args) == 4 else 5
+    # Parse the arguments
+    args = parser.parse_args()
+    filename = args.recommender_file_name
+    wikipedia_urls = args.wikipedia_urls
+    top_n = args.top_n
 
     # Load recommender and generate recommendations
     recommender = WikipediaRecommender.load_from_file(filename)
-    recommendations = recommender.recommend(wikipedia_url)
+    recommendations = recommender.recommend(wikipedia_urls)
 
     # Display top N recommendations
     top_recommendations = recommendations.head(top_n)
-    pd.set_option('display.max_colwidth', None) # Make sure the URL is displayed in full
+    pd.set_option('display.max_colwidth', None)  # Ensure full URLs are displayed
     print(top_recommendations)
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
