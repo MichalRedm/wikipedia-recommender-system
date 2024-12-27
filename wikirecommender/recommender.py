@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm.auto import tqdm
-from typing import List
+from typing import List, Union
 
 from wikirecommender.scraping import wikipedia_scrapper, wikipedia_scrapper_single_page
 from wikirecommender.processing import stemmer
@@ -57,7 +57,7 @@ class WikipediaRecommender:
         
         return similarities
 
-    def recommend(self, url: str | List[str]) -> pd.DataFrame:
+    def recommend(self, url: Union[str, List[str]]) -> pd.DataFrame:
         """Compare a new article to the dataset using cosine similarity."""
         similarities = None
 
