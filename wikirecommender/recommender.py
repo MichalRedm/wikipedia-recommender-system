@@ -91,12 +91,10 @@ class WikipediaRecommender:
         idf_values = self.vectorizer.idf_
 
         # Convert to DataFrame
-        df_vocab = pd.DataFrame(list(vocabulary.items()), columns=['term', 'index'])
-        df_idf = pd.DataFrame(idf_values, index=list(vocabulary.keys()), columns=['idf'])
-
-        df = df_vocab.join(df_idf, on='term')
-        df.sort_values(by='index', inplace=True)
-        df.drop(columns=['index'], inplace=True)
+        df = pd.DataFrame(
+            [(term, index, idf_values[index]) for term, index in vocabulary.items()],
+            columns=['term', 'index', 'idf']
+        )
         df.set_index('term', inplace=True)
         df = df.transpose()
         df = pd.concat([df, self.dataset], axis=0)
@@ -114,9 +112,11 @@ class WikipediaRecommender:
     
         df = pd.read_csv(filename, index_col='wikipedia_url')
 
-        vocabulary = dict(zip(df.columns, range(len(df.columns))))
-        idf_values = df.iloc[0].values
-        dataset = df.iloc[1:]
+        vocabulary = dict(zip(df.columns, df.iloc[0].astype("int")))
+        metadata = df.iloc[:2]
+        metadata.index = pd.Index(['index', 'idf'])
+        idf_values = metadata.transpose().sort_values(by='index')['idf'].values
+        dataset = df.iloc[2:]
 
         recommender = WikipediaRecommender()
         recommender.vectorizer = TfidfVectorizer(vocabulary=vocabulary)
