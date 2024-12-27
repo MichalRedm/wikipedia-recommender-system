@@ -21,7 +21,7 @@ def wikipedia_scrapper_single_page(url: str) -> str:
 
     return new_text
 
-def wikipedia_scrapper(link: str, page_count: int = 20, *, verbose: bool = True) -> pd.DataFrame:
+def wikipedia_scrapper(link: str, page_count: int = 20, *, verbose: bool = True, min_sleep_time: float = 0.25, max_sleep_time: float = 0.5) -> pd.DataFrame:
     """Scrape Wikipedia articles and return a DataFrame."""
     assert link.startswith("https://en.wikipedia.org/wiki/"), "Link must start with https://en.wikipedia.org/wiki/"
 
@@ -53,6 +53,6 @@ def wikipedia_scrapper(link: str, page_count: int = 20, *, verbose: bool = True)
                 result.append({"wikipedia_url": current_link, "text": body_content.get_text(strip=True)})
                 pbar.update(1)
 
-            sleep(random.random() * 3)
+            sleep((max_sleep_time - min_sleep_time) * random.random() + min_sleep_time)
 
     return pd.DataFrame(result)
