@@ -29,7 +29,7 @@ def wikipedia_scrapper(link: str, page_count: int = 20, *, verbose: bool = True,
     queue = [link]
     visited = set()
 
-    with tqdm(total=page_count, desc="Scrapping progress", disable=(not verbose)) as pbar:
+    with tqdm(total=page_count, desc="Scraping articles", disable=(not verbose)) as pbar:
         while len(result) < page_count:
             current_link = queue.pop()
             if current_link in visited:
