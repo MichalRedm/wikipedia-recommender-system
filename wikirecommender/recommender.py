@@ -92,8 +92,11 @@ class WikipediaRecommender:
 
         # Convert to DataFrame
         df = pd.DataFrame(
-            [(term, index, idf_values[index]) for term, index in vocabulary.items()],
-            columns=['term', 'index', 'idf']
+            [
+                (term, idf_values[index])
+                for term, index in sorted(vocabulary.items(), key=lambda x: x[1])
+            ],
+            columns=['term', 'idf']
         )
         df.set_index('term', inplace=True)
         df = df.transpose()
@@ -112,11 +115,9 @@ class WikipediaRecommender:
     
         df = pd.read_csv(filename, index_col='wikipedia_url')
 
-        vocabulary = dict(zip(df.columns, df.iloc[0].astype("int")))
-        metadata = df.iloc[:2]
-        metadata.index = pd.Index(['index', 'idf'])
-        idf_values = metadata.transpose().sort_values(by='index')['idf'].values
-        dataset = df.iloc[2:]
+        vocabulary = df.columns
+        idf_values = df.iloc[0].values
+        dataset = df.iloc[1:]
 
         recommender = WikipediaRecommender()
         recommender.vectorizer = TfidfVectorizer(vocabulary=vocabulary)
