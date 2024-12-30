@@ -2,7 +2,13 @@
 
 ![Python package](https://github.com/MichalRedm/wikipedia-recommender-system/actions/workflows/python-package.yml/badge.svg)
 
+Here’s an expanded and detailed **Usage** section for the README to better illustrate the capabilities of the `WikipediaRecommender` class:
+
 ## Usage
+
+Here’s a guide on how to use the `WikipediaRecommender` class to load articles, generate recommendations, and save or load the recommender system.
+
+### Basic Example
 
 ```python
 from wikirecommender import WikipediaRecommender
@@ -12,7 +18,7 @@ url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
 # Instantiate the recommender
 recommender = WikipediaRecommender()
 
-# Load articles into the recommender
+# Load articles into the recommender (default: 20 articles from the Wikipedia Popular Pages)
 recommender.load_articles()
 
 # Compare a new article to the dataset
@@ -21,6 +27,73 @@ recommendations = recommender.recommend(url)
 # Show top 5 recommendations
 print(recommendations.head())
 ```
+
+### Customizing Article Loading
+
+You can control the number of pages to scrape and the starting point for article scraping.
+
+```python
+# Load 100 articles starting from a specific URL
+recommender.load_articles(page_count=100, start_link="https://en.wikipedia.org/wiki/Main_Page")
+```
+
+### Handling Multiple URLs
+
+If you want to recommend articles for multiple Wikipedia pages simultaneously:
+
+```python
+urls = [
+    "https://en.wikipedia.org/wiki/Machine_learning",
+    "https://en.wikipedia.org/wiki/Artificial_intelligence"
+]
+
+# Generate recommendations for multiple pages
+recommendations = recommender.recommend(urls)
+
+# Display the top 10 recommendations
+print(recommendations.head(10))
+```
+
+### Including or Excluding Provided URLs
+
+By default, the recommendations exclude the URLs provided as input. You can include them if needed:
+
+```python
+# Include the provided URL in the recommendations
+recommendations = recommender.recommend(url, include_provided_urls=True)
+
+# Display the top 5 recommendations, including the provided URL
+print(recommendations.head(5))
+```
+
+### Saving and Loading the Recommender System
+
+You can save the recommender system to a file and reload it later for reuse.
+
+#### Saving to a File
+
+```python
+# Save the current state to a file
+recommender.save_to_file("recommender.csv")
+```
+
+#### Loading from a File
+
+```python
+from wikirecommender import WikipediaRecommender
+
+# Load a previously saved recommender system
+recommender = WikipediaRecommender.load_from_file("recommender.csv")
+```
+
+### Advanced Use: Scraping and Processing Articles
+
+The `WikipediaRecommender` class uses internal methods for scraping and processing articles. For example:
+- **`load_articles`** scrapes Wikipedia articles starting from a given URL.
+- **`stemmer`** processes article text into stemmed tokens.
+- **TF-IDF Representation** is used to calculate similarities between articles.
+
+This ensures efficient and accurate recommendations based on article content.
 
 ## Scripts
 
