@@ -2,8 +2,6 @@
 
 ![Python package](https://github.com/MichalRedm/wikipedia-recommender-system/actions/workflows/python-package.yml/badge.svg)
 
-Here’s an expanded and detailed **Usage** section for the README to better illustrate the capabilities of the `WikipediaRecommender` class:
-
 ## Usage
 
 Here’s a guide on how to use the `WikipediaRecommender` class to load articles, generate recommendations, and save or load the recommender system.
