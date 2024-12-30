@@ -16,7 +16,7 @@ def main() -> None:
         help="One or more Wikipedia article URLs for which recommendations should be provided."
     )
     parser.add_argument(
-        "--top-n",
+        "--top",
         type=int,
         default=5,
         help="Number of top recommended articles to display (default: 5)."
@@ -31,7 +31,7 @@ def main() -> None:
     args = parser.parse_args()
     filename = args.recommender_file_name
     wikipedia_urls = args.wikipedia_urls
-    top_n = args.top_n
+    top_n = args.top
     include_provided = args.include_provided
 
     # Load recommender and generate recommendations
