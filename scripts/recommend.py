@@ -21,16 +21,22 @@ def main() -> None:
         default=5,
         help="Number of top recommended articles to display (default: 5)."
     )
+    parser.add_argument(
+        "--include-provided",
+        action="store_true",
+        help="Include the provided URLs in the recommendations (default: False)."
+    )
     
     # Parse the arguments
     args = parser.parse_args()
     filename = args.recommender_file_name
     wikipedia_urls = args.wikipedia_urls
     top_n = args.top_n
+    include_provided = args.include_provided
 
     # Load recommender and generate recommendations
     recommender = WikipediaRecommender.load_from_file(filename)
-    recommendations = recommender.recommend(wikipedia_urls)
+    recommendations = recommender.recommend(wikipedia_urls, include_provided_urls=include_provided)
 
     # Display top N recommendations
     top_recommendations = recommendations.head(top_n)
