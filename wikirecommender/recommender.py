@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm.auto import tqdm
-from typing import List, Union
+from typing import List, Union, Tuple
 
 from wikirecommender.scraping import wikipedia_scrapper, wikipedia_scrapper_single_page
 from wikirecommender.processing import stemmer
@@ -33,13 +33,13 @@ class WikipediaRecommender:
         tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=self.vectorizer.get_feature_names_out())
         self.dataset = pd.concat([df[['wikipedia_url']], tfidf_df], axis=1)
     
-    def _get_similarities(self, url: str) -> np.ndarray:
+    def _get_similarities(self, url: str) -> Tuple[np.ndarray, str]:
         """Compare a new article to the dataset using cosine similarity."""
         if self.dataset is None or self.vectorizer is None:
             raise Exception("The dataset is not loaded. Please call load_articles() first.")
 
         # Scrape and process the given URL
-        new_text = wikipedia_scrapper_single_page(url)
+        new_text, resolved_link = wikipedia_scrapper_single_page(url)
         
         # Stem and process the new article text
         stemmed_words = stemmer(new_text)
@@ -55,18 +55,20 @@ class WikipediaRecommender:
         # Compute cosine similarity between the new article and the dataset
         similarities = cosine_similarity(new_article_tfidf, existing_tfidf_matrix).flatten()
         
-        return similarities
+        return similarities, resolved_link
 
-    def recommend(self, url: Union[str, List[str]]) -> pd.DataFrame:
+    def recommend(self, url: Union[str, List[str]], include_provided_urls: bool = False) -> pd.DataFrame:
         """Compare a new article to the dataset using cosine similarity."""
-        similarities = None
+        similarities = resolved_links = None
 
         if isinstance(url, str):
-            similarities = self._get_similarities(url)
+            similarities, resolved_link = self._get_similarities(url)
+            resolved_links = [resolved_link]
         elif isinstance(url, list):
             if len(url) == 0:
                 raise ValueError("URL list cannot be empty.")
-            similarities_list = np.array([self._get_similarities(u) for u in url])
+            similarities_list, resolved_links = zip(*[self._get_similarities(u) for u in url])
+            similarities_list = np.array(similarities_list)
             similarities = similarities_list.mean(axis=0)
         else:
             raise ValueError("URL must be a string or a list of strings.")
@@ -76,6 +78,9 @@ class WikipediaRecommender:
             'URL': self.dataset['wikipedia_url'].values,
             'Similarity': similarities
         }).sort_values(by='Similarity', ascending=False)
+
+        if not include_provided_urls:
+            result_df = result_df[~result_df['URL'].isin(resolved_links)]
 
         result_df.index = pd.RangeIndex(start=1, stop=len(result_df) + 1, step=1)
         
