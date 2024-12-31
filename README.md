@@ -184,3 +184,13 @@ Example:
 ```
 python -m scripts.recommend recommender.csv https://en.wikipedia.org/wiki/Python_(programming_language) --top 10 --include-provided
 ```
+
+## Troubleshooting
+
+When testing our recommender system, we've ran into one issue. The nltk resources, used by our recommender system when processing scraped articles, should normally download automatically when our package is loaded; however, sometimes that was not the case. In such a situation, the following code can be used:
+
+```python
+from wikirecommender.utils import download_nltk_resources
+
+download_nltk_resources()
+```
