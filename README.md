@@ -2,6 +2,57 @@
 
 ![Python package](https://github.com/MichalRedm/wikipedia-recommender-system/actions/workflows/python-package.yml/badge.svg)
 
+## Setup
+
+To get started with the `Wikipedia Recommender System` project, follow these steps:
+
+### 1. Clone the repository
+
+First, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/MichalRedm/wikipedia-recommender-system.git
+cd wikipedia-recommender-system
+```
+
+### 2. Create a Python Virtual Environment
+
+It’s recommended to use a virtual environment to manage dependencies and avoid conflicts with other projects. Here’s how to create and activate a virtual environment:
+
+#### On Windows:
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+#### On macOS/Linux:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install the package
+
+Since the package is not published on PyPI, install it directly from the local source:
+
+```bash
+pip install .
+```
+
+This will install the `Wikipedia Recommender System` package along with its dependencies.
+
+### 4. Verify installation
+
+To verify that the package has been installed correctly, try running Python and importing the package:
+
+```bash
+python
+>>> from wikirecommender import WikipediaRecommender
+>>> print(WikipediaRecommender)
+```
+
+You should see the class definition or a similar output indicating the package is ready to use.
+
 ## Usage
 
 Here’s a guide on how to use the `WikipediaRecommender` class to load articles, generate recommendations, and save or load the recommender system.
